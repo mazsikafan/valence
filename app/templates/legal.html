@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }} — Valence Diagnostics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF; --surface: #F4F4F4; --border: #000000;
+            --text-primary: #000000; --text-secondary: #4A4A4A; --text-muted: #888888;
+            --accent: #005938;
+            --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--bg); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; }
+
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 64px; z-index: 50;
+            background: #fff; border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+        .brand .logo { width: 24px; height: 24px; background: #000; display: flex; align-items: center; justify-content: center; }
+        .brand .logo::after { content: ""; width: 8px; height: 8px; background: #fff; }
+        .brand .name { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; text-transform: uppercase; }
+        .nav-links { display: flex; align-items: center; gap: 28px; }
+        .nav-links a.link {
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            text-decoration: none; transition: color 0.15s;
+        }
+        .nav-links a.link:hover { color: var(--accent); }
+        .nav-cta {
+            padding: 10px 20px; background: #000; color: #fff; text-decoration: none;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            transition: background 0.15s;
+        }
+        .nav-cta:hover { background: var(--accent); }
+        @media (max-width: 820px) { .nav-links a.link { display: none; } }
+
+        main { padding: 64px 0 0; }
+        .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+        .page-header {
+            background: var(--surface); border-bottom: 2px solid var(--border);
+            padding: 72px 0 56px; position: relative; overflow: hidden;
+        }
+        .page-header::before {
+            content: ""; position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, #000 1px, transparent 0);
+            background-size: 24px 24px; opacity: 0.03; pointer-events: none;
+        }
+        .page-header-inner { position: relative; z-index: 2; }
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 5px 12px; background: #000; color: #fff;
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            margin-bottom: 20px;
+        }
+        h1 { font-size: 56px; font-weight: 800; letter-spacing: -0.04em; text-transform: uppercase; line-height: 1.05; margin-bottom: 12px; }
+        .sub { font-family: var(--font-mono); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-secondary); }
+        @media (max-width: 640px) { h1 { font-size: 36px; } }
+
+        .prose { padding: 64px 0 96px; border-bottom: 2px solid var(--border); background: #fff; }
+        .prose h2 {
+            font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em;
+            padding-bottom: 12px; border-bottom: 2px solid var(--border);
+            margin: 40px 0 20px;
+        }
+        .prose h2:first-child { margin-top: 0; }
+        .prose h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; margin: 24px 0 10px; }
+        .prose p, .prose li { color: var(--text-secondary); font-size: 15px; line-height: 1.75; margin-bottom: 14px; }
+        .prose strong { color: #000; font-weight: 800; }
+        .prose ul, .prose ol { padding-left: 24px; margin-bottom: 14px; }
+        .prose a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+        .prose a:hover { color: #000; }
+        .meta-note {
+            padding: 16px 20px; background: var(--surface); border: 2px solid var(--border);
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        footer { padding: 48px 0; background: #fff; }
+        .foot-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+        .foot-links {
+            display: flex; gap: 24px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+        .foot-links a { text-decoration: none; }
+        .foot-links a:hover { color: #000; }
+        .foot-copy { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="/" class="brand">
+        <div class="logo"></div>
+        <span class="name">Valence Diagnostics</span>
+    </a>
+    <div class="nav-links">
+        <a href="/#solutions" class="link">Solutions</a>
+        <a href="/pricing" class="link">Pricing</a>
+        <a href="/contact" class="link">Contact</a>
+        <a href="/app" class="nav-cta">Client Login</a>
+    </div>
+</nav>
+
+<main>
+    <section class="page-header">
+        <div class="container page-header-inner">
+            <div class="pill">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M8 2h8l4 4v16H4V2h4zm0 0v6h8V2"/></svg>
+                Legal
+            </div>
+            <h1>{{ title }}</h1>
+            <p class="sub">Last updated · April 17, 2026</p>
+        </div>
+    </section>
+
+    <section class="prose">
+        <div class="container">
+            {% include body_template %}
+        </div>
+    </section>
+
+    <footer>
+        <div class="container foot-inner">
+            <a href="/" class="brand">
+                <div class="logo"></div>
+                <span class="name">Valence Diagnostics</span>
+            </a>
+            <div class="foot-links">
+                <a href="/privacy">Privacy</a>
+                <a href="/terms">Terms</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <div class="foot-copy">&copy; 2026 Valence Diagnostics.</div>
+        </div>
+    </footer>
+</main>
+</body>
+</html>

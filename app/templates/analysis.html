@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Analysis {{ job.job_id }} — Valence Diagnostics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --surface: #F4F4F4;
+            --border: #000000;
+            --text-primary: #000000;
+            --text-secondary: #4A4A4A;
+            --text-muted: #888888;
+            --accent: #005938;
+            --danger: #A31616;
+            --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg); color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 64px; z-index: 50;
+            background: #fff;
+            border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand .logo {
+            width: 24px; height: 24px; background: #000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .brand .logo::after { content: ""; width: 8px; height: 8px; background: #fff; }
+        .brand .name {
+            font-weight: 800; font-size: 18px;
+            letter-spacing: -0.02em; text-transform: uppercase;
+        }
+        .back-link {
+            font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: #000; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: color 0.15s;
+        }
+        .back-link:hover { color: var(--accent); }
+
+        main { padding: 96px 24px 96px; max-width: 960px; margin: 0 auto; }
+
+        .page-header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 24px; margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: 40px; font-weight: 800;
+            letter-spacing: -0.035em; text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .page-header .subtitle {
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;
+        }
+
+        .card {
+            border: 2px solid var(--border); background: #fff;
+            box-shadow: 8px 8px 0 0 rgba(0,0,0,1);
+        }
+        .card .head {
+            background: #000; color: #fff;
+            padding: 14px 24px;
+            font-family: var(--font-mono);
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card .body { padding: 28px 24px; }
+
+        .meta-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 0;
+            border: 2px solid var(--border); background: #000;
+        }
+        .meta-cell {
+            background: #fff; padding: 18px 20px;
+            border-right: 2px solid var(--border);
+            border-bottom: 2px solid var(--border);
+        }
+        .meta-cell:nth-child(2n) { border-right: 0; }
+        .meta-cell:nth-last-child(-n+2) { border-bottom: 0; }
+        .meta-cell .label {
+            font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary); margin-bottom: 8px;
+        }
+        .meta-cell .value {
+            font-family: var(--font-mono);
+            font-size: 14px; font-weight: 700;
+            color: #000;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 14px;
+            font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: #fff;
+            border: 2px solid #000;
+        }
+        .status-completed { background: var(--accent); }
+        .status-processing { background: #B45309; }
+        .status-queued { background: #555; }
+        .status-failed { background: var(--danger); }
+
+        .download-row {
+            display: grid; gap: 2px;
+            grid-template-columns: 1fr 1fr;
+            background: #000;
+            border: 2px solid var(--border);
+            margin-top: 24px;
+        }
+        @media (min-width: 640px) { .download-row { grid-template-columns: repeat(4, 1fr); } }
+        .download-btn {
+            padding: 18px 16px;
+            background: #fff; color: #000;
+            border: 0; cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.18em;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+        }
+        .download-btn:hover { background: #000; color: #fff; }
+        .download-btn svg { width: 14px; height: 14px; }
+
+        .error-banner {
+            border: 2px solid var(--danger);
+            background: #FFF1F1;
+            padding: 20px 24px;
+            margin-top: 24px;
+            font-family: var(--font-mono);
+            font-size: 12px; font-weight: 700;
+            color: var(--danger);
+        }
+
+        .refresh {
+            margin-top: 24px; display: flex; gap: 12px; align-items: center;
+            font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+        .refresh a {
+            color: #000; text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+        .refresh a:hover { color: var(--accent); }
+
+        @media (max-width: 640px) {
+            .page-header h1 { font-size: 30px; }
+            main { padding: 88px 16px 64px; }
+            .meta-grid { grid-template-columns: 1fr; }
+            .meta-cell { border-right: 0 !important; border-bottom: 2px solid var(--border) !important; }
+            .meta-cell:last-child { border-bottom: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="/" class="brand" style="text-decoration:none;color:inherit">
+        <div class="logo"></div>
+        <span class="name">Valence Diagnostics</span>
+    </a>
+    <a class="back-link" href="/app">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="square" d="M19 12H5m0 0l6 6m-6-6l6-6"/></svg>
+        Back to Engine
+    </a>
+</nav>
+
+<main>
+    <div class="page-header">
+        <h1>Analysis Record</h1>
+        <p class="subtitle">JOB · {{ job.job_id }}</p>
+    </div>
+
+    <div class="card">
+        <div class="head">
+            <span>Job Metadata</span>
+            <span class="status status-{{ job.status }}">{{ job.status }}</span>
+        </div>
+        <div class="body">
+            <div class="meta-grid">
+                <div class="meta-cell">
+                    <div class="label">Job ID</div>
+                    <div class="value">{{ job.job_id }}</div>
+                </div>
+                <div class="meta-cell">
+                    <div class="label">Filename</div>
+                    <div class="value">{{ job.get('filename', 'Unknown') }}</div>
+                </div>
+                <div class="meta-cell">
+                    <div class="label">Created</div>
+                    <div class="value">{{ job.get('created_at', '—')[:19] }}</div>
+                </div>
+                <div class="meta-cell">
+                    <div class="label">Status</div>
+                    <div class="value">{{ job.status | upper }}</div>
+                </div>
+            </div>
+
+            {% if job.status == 'completed' %}
+            <div class="download-row">
+                <a class="download-btn" href="/api/report/{{ job.job_id }}/pdf">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M14 2H6v20h12V6l-4-4zm0 0v4h4"/></svg>
+                    Export PDF
+                </a>
+                <a class="download-btn" href="/api/report/{{ job.job_id }}/json">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 6h16M4 12h16M4 18h10"/></svg>
+                    Export JSON
+                </a>
+                <a class="download-btn" href="/api/report/{{ job.job_id }}/csv">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 4h16v16H4V4zm0 6h16M10 4v16"/></svg>
+                    Export CSV
+                </a>
+                <a class="download-btn" href="/api/report/{{ job.job_id }}/html">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 4h16v16H4V4zm0 4h16"/></svg>
+                    Full Report
+                </a>
+            </div>
+            {% elif job.status == 'failed' %}
+            <div class="error-banner">
+                ERROR · {{ job.get('error', 'Unknown failure') }}
+            </div>
+            {% else %}
+            <div class="refresh">
+                <span>Analysis in progress</span>
+                <a href="" onclick="location.reload();return false;">Refresh →</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

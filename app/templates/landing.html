@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Valence Diagnostics — Enterprise AI for Bovine Genetics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --surface: #F4F4F4;
+            --surface-hover: #EAEAEA;
+            --border: #000000;
+            --text-primary: #000000;
+            --text-secondary: #4A4A4A;
+            --text-muted: #888888;
+            --accent: #005938;
+            --accent-hover: #004028;
+            --accent-light: #E6F0EC;
+            --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg); color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ── Navigation ─────────────────────────────────────────────── */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 64px; z-index: 50;
+            background: #fff;
+            border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand .logo {
+            width: 24px; height: 24px; background: #000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .brand .logo::after { content: ""; width: 8px; height: 8px; background: #fff; }
+        .brand .name {
+            font-weight: 800; font-size: 18px;
+            letter-spacing: -0.02em; text-transform: uppercase;
+        }
+        .nav-links {
+            display: flex; align-items: center; gap: 32px;
+        }
+        .nav-links a.link {
+            font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            transition: color 0.15s;
+        }
+        .nav-links a.link:hover { color: var(--accent); }
+        .nav-cta {
+            padding: 10px 20px;
+            background: #000; color: #fff;
+            font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            border: 0; cursor: pointer;
+            transition: background 0.15s;
+        }
+        .nav-cta:hover { background: var(--accent); }
+        @media (max-width: 720px) {
+            .nav-links a.link { display: none; }
+        }
+
+        /* ── Shared ─────────────────────────────────────────────────── */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .section-border { border-bottom: 2px solid var(--border); }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px 32px;
+            font-family: var(--font-sans);
+            font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            border: 0; cursor: pointer;
+            transition: background 0.15s, color 0.15s, transform 0.15s;
+        }
+        .btn-primary { background: #000; color: #fff; }
+        .btn-primary:hover { background: var(--accent); }
+        .btn-primary svg { transition: transform 0.15s; }
+        .btn-primary:hover svg { transform: translateX(4px); }
+        .btn-outline {
+            background: #fff; color: #000;
+            border: 2px solid var(--border);
+        }
+        .btn-outline:hover { background: var(--surface); }
+
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 5px 12px;
+            background: #000; color: #fff;
+            font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            margin-bottom: 32px;
+        }
+        .pill svg { width: 12px; height: 12px; }
+
+        /* ── Hero ───────────────────────────────────────────────────── */
+        .hero {
+            position: relative;
+            background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            padding-top: 96px; padding-bottom: 128px;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: ""; position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, #000 1px, transparent 0);
+            background-size: 24px 24px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        .hero-inner {
+            position: relative; z-index: 2;
+            padding-top: 24px;
+            animation: fade-up 0.8s ease-out;
+        }
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero h1 {
+            font-size: 96px; font-weight: 800;
+            letter-spacing: -0.04em; line-height: 1.05;
+            margin-bottom: 32px;
+            max-width: 900px;
+        }
+        .hero h1 .accent { color: var(--accent); }
+        .hero p {
+            font-size: 20px; font-weight: 500;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin-bottom: 48px;
+        }
+        .hero-ctas {
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        @media (min-width: 640px) { .hero-ctas { flex-direction: row; } }
+        @media (max-width: 900px) { .hero h1 { font-size: 64px; } }
+        @media (max-width: 640px) {
+            .hero { padding-top: 72px; padding-bottom: 88px; }
+            .hero h1 { font-size: 44px; }
+            .hero p { font-size: 16px; }
+        }
+
+        /* ── Trust Banner ───────────────────────────────────────────── */
+        .trust {
+            border-bottom: 2px solid var(--border);
+            background: #fff;
+            padding: 24px 0;
+        }
+        .trust-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 32px; flex-wrap: wrap;
+        }
+        .trust-label {
+            font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-muted);
+        }
+        .trust-logos {
+            display: flex; align-items: center; flex-wrap: wrap;
+            gap: 40px; opacity: 0.55;
+            filter: grayscale(1);
+        }
+        .trust-logo {
+            font-size: 18px; font-weight: 800;
+        }
+        .trust-logo.a { letter-spacing: -0.01em; }
+        .trust-logo.b { letter-spacing: -0.03em; }
+        .trust-logo.c { letter-spacing: 0.02em; }
+        .trust-logo.d { letter-spacing: 0.18em; text-transform: uppercase; }
+
+        /* ── Sections ───────────────────────────────────────────────── */
+        .section { padding: 96px 0; border-bottom: 2px solid var(--border); }
+        .section.white { background: #fff; }
+        .section.surface { background: var(--surface); }
+        .section-header {
+            max-width: 640px; margin-bottom: 64px;
+        }
+        .section-header h2 {
+            font-size: 40px; font-weight: 800;
+            letter-spacing: -0.035em; text-transform: uppercase;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        .section-header p {
+            font-size: 18px; color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        /* ── Solutions grid ─────────────────────────────────────────── */
+        .feat-grid {
+            display: grid; grid-template-columns: 1fr;
+            border: 2px solid var(--border);
+            background: #000; gap: 2px;
+        }
+        @media (min-width: 900px) { .feat-grid { grid-template-columns: repeat(3, 1fr); } }
+        .feat {
+            background: #fff; padding: 40px 32px;
+            display: flex; flex-direction: column;
+        }
+        .feat-icon {
+            width: 48px; height: 48px;
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 28px;
+        }
+        .feat-icon svg { width: 22px; height: 22px; }
+        .feat h3 {
+            font-size: 20px; font-weight: 800;
+            letter-spacing: -0.02em; text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .feat p {
+            color: var(--text-secondary);
+            font-size: 14px; line-height: 1.65;
+        }
+
+        /* ── Methodology split ──────────────────────────────────────── */
+        .split {
+            display: grid; grid-template-columns: 1fr;
+            gap: 64px; align-items: start;
+        }
+        @media (min-width: 960px) { .split { grid-template-columns: 1fr 1fr; } }
+        .split-left h2 {
+            font-size: 40px; font-weight: 800;
+            letter-spacing: -0.035em; text-transform: uppercase;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        .split-left p {
+            font-size: 18px; color: var(--text-secondary);
+            line-height: 1.65; margin-bottom: 32px;
+        }
+        .check-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+        .check-list li {
+            display: flex; align-items: center; gap: 14px;
+            font-size: 13px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: -0.005em;
+            color: #000;
+        }
+        .check-list li svg { width: 20px; height: 20px; color: var(--accent); flex-shrink: 0; }
+
+        .method-card {
+            border: 2px solid var(--border);
+            background: #fff;
+            box-shadow: 8px 8px 0 0 rgba(0,0,0,1);
+        }
+        .method-head {
+            background: #000; color: #fff;
+            padding: 14px 24px;
+            font-family: var(--font-mono);
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .method-head .status {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .method-head .status .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+        .method-step {
+            padding: 32px;
+            display: flex; gap: 24px; align-items: flex-start;
+            border-bottom: 2px solid var(--border);
+            transition: background 0.15s;
+        }
+        .method-step:last-child { border-bottom: 0; }
+        .method-step:hover { background: var(--surface); }
+        .method-step .num {
+            font-family: var(--font-mono);
+            font-size: 30px; font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+        .method-step h4 {
+            font-size: 13px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            margin-bottom: 10px;
+        }
+        .method-step p {
+            font-size: 13px; color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        /* ── CTA banner ─────────────────────────────────────────────── */
+        .cta-banner {
+            background: #000; color: #fff;
+            padding: 64px 0;
+            border-bottom: 2px solid var(--border);
+        }
+        .cta-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 24px; flex-wrap: wrap;
+        }
+        .cta-text h3 {
+            font-size: 32px; font-weight: 800;
+            letter-spacing: -0.025em; text-transform: uppercase;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .cta-text p {
+            color: rgba(255,255,255,0.65);
+            font-family: var(--font-mono);
+            font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.2em;
+        }
+        .btn-accent { background: var(--accent); color: #fff; }
+        .btn-accent:hover { background: #fff; color: #000; }
+
+        /* ── Footer ─────────────────────────────────────────────────── */
+        footer {
+            padding: 48px 0; background: #fff;
+        }
+        .foot-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 24px; flex-wrap: wrap;
+        }
+        .foot-links {
+            display: flex; gap: 24px;
+            font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+        .foot-links a:hover { color: #000; }
+        .foot-copy {
+            font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="/" class="brand">
+        <div class="logo"></div>
+        <span class="name">Valence Diagnostics</span>
+    </a>
+    <div class="nav-links">
+        <a href="#solutions" class="link">Solutions</a>
+        <a href="#methodology" class="link">Methodology</a>
+        <a href="/pricing" class="link">Pricing</a>
+        <a href="/contact" class="link">Contact</a>
+        <a href="/app" class="nav-cta">Client Login</a>
+    </div>
+</nav>
+
+<main style="padding-top:64px">
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container hero-inner">
+            <div class="pill">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg>
+                Institutional-Grade Diagnostics
+            </div>
+            <h1>
+                ENTERPRISE AI FOR<br>
+                <span class="accent">BOVINE GENETICS.</span>
+            </h1>
+            <p>
+                Valence Diagnostics provides proprietary computer vision infrastructure for the agricultural sector. Real-time, institutional-grade valuation of genetic material for commercial breeders and veterinary labs.
+            </p>
+            <div class="hero-ctas">
+                <a href="/app" class="btn btn-primary">
+                    Request Enterprise Demo
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="square" d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+                </a>
+                <a href="#methodology" class="btn btn-outline">Read the Whitepaper</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Banner -->
+    <section class="trust">
+        <div class="container trust-inner">
+            <span class="trust-label">Trusted by industry leaders</span>
+            <div class="trust-logos">
+                <span class="trust-logo a">CONTINENTAL AGTECH</span>
+                <span class="trust-logo b">VANGUARD LABS</span>
+                <span class="trust-logo c">MERIDIAN RESEARCH</span>
+                <span class="trust-logo d">APEX VISION</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions -->
+    <section id="solutions" class="section white">
+        <div class="container">
+            <div class="section-header">
+                <h2>Unparalleled Market Dominance</h2>
+                <p>Our infrastructure is designed for high-scale operations, delivering absolute data security and seamless scalability. We replace manual microscopy with deterministic AI validation.</p>
+            </div>
+            <div class="feat-grid">
+                <div class="feat">
+                    <div class="feat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+                    </div>
+                    <h3>Real-Time Analysis</h3>
+                    <p>Sub-millisecond processing of microscope video feeds. Instantaneous motility and morphology scoring.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path stroke-linecap="square" d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+                    </div>
+                    <h3>Scalable Infrastructure</h3>
+                    <p>Cloud-native architecture built to handle millions of diagnostic records with zero latency.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10"/><path stroke-linecap="square" d="M8 10V7a4 4 0 018 0v3"/></svg>
+                    </div>
+                    <h3>Absolute Security</h3>
+                    <p>SOC2 compliant end-to-end encryption for sensitive genetic data and proprietary valuations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodology -->
+    <section id="methodology" class="section surface">
+        <div class="container">
+            <div class="split">
+                <div class="split-left">
+                    <div class="pill">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 20h16M6 16v-6m4 6V4m4 12V8m4 8v-4"/></svg>
+                        Proprietary Models
+                    </div>
+                    <h2>Deterministic Valuation at Scale</h2>
+                    <p>Valence Diagnostics leverages custom-trained convolutional neural networks to analyze cellular structure and movement patterns. By standardizing the valuation process, we eliminate human error and provide a transparent, auditable trail for every sample.</p>
+                    <ul class="check-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            99.9% Confidence Interval on Morphology
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Automated Tier Classification
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Instant PDF Report Generation
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            API Integration for LIMS
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-head">
+                        <span>Methodology</span>
+                        <span class="status"><span class="dot"></span>System Active</span>
+                    </div>
+                    <div class="method-step">
+                        <span class="num">01</span>
+                        <div>
+                            <h4>Secure Ingestion</h4>
+                            <p>Encrypted upload of high-resolution microscope video feeds via the client portal. Supports standard formats (.mp4, .avi).</p>
+                        </div>
+                    </div>
+                    <div class="method-step">
+                        <span class="num">02</span>
+                        <div>
+                            <h4>Deterministic Processing</h4>
+                            <p>Client authentication initiates the AI processing pipeline. Zero-latency cloud execution on proprietary CNN models.</p>
+                        </div>
+                    </div>
+                    <div class="method-step">
+                        <span class="num">03</span>
+                        <div>
+                            <h4>Quantitative Analytics</h4>
+                            <p>Delivery of institutional-grade valuation, motility, and morphology metrics. Exportable to LIMS and PDF.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="cta-banner">
+        <div class="container cta-inner">
+            <div class="cta-text">
+                <h3>Ready to Value Your Genetics?</h3>
+                <p>Institutional access · SOC2 compliant · Deterministic</p>
+            </div>
+            <a href="/app" class="btn btn-accent">
+                Launch Diagnostic Engine
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="square" d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container foot-inner">
+            <a href="/" class="brand">
+                <div class="logo"></div>
+                <span class="name">Valence Diagnostics</span>
+            </a>
+            <div class="foot-links">
+                <a href="/pricing">Pricing</a>
+                <a href="/contact">Contact</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <div class="foot-copy">&copy; 2026 Valence Diagnostics. All rights reserved.</div>
+        </div>
+    </footer>
+</main>
+
+</body>
+</html>

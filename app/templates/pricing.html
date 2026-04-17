@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pricing — Valence Diagnostics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --surface: #F4F4F4;
+            --border: #000000;
+            --text-primary: #000000;
+            --text-secondary: #4A4A4A;
+            --text-muted: #888888;
+            --accent: #005938;
+            --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-sans); background: var(--bg); color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 64px; z-index: 50;
+            background: #fff; border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand .logo { width: 24px; height: 24px; background: #000; display: flex; align-items: center; justify-content: center; }
+        .brand .logo::after { content: ""; width: 8px; height: 8px; background: #fff; }
+        .brand .name { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; text-transform: uppercase; }
+        .nav-links { display: flex; align-items: center; gap: 28px; }
+        .nav-links a.link {
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            transition: color 0.15s;
+        }
+        .nav-links a.link:hover { color: var(--accent); }
+        .nav-links a.active { color: var(--accent); }
+        .nav-cta {
+            padding: 10px 20px; background: #000; color: #fff;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            transition: background 0.15s;
+        }
+        .nav-cta:hover { background: var(--accent); }
+        @media (max-width: 820px) { .nav-links a.link { display: none; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        main { padding-top: 64px; }
+
+        .hero-pricing {
+            background: var(--surface); border-bottom: 2px solid var(--border);
+            padding: 80px 0 64px; position: relative; overflow: hidden;
+        }
+        .hero-pricing::before {
+            content: ""; position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, #000 1px, transparent 0);
+            background-size: 24px 24px; opacity: 0.03; pointer-events: none;
+        }
+        .hero-pricing-inner { position: relative; z-index: 2; max-width: 720px; }
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 5px 12px; background: #000; color: #fff;
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            margin-bottom: 24px;
+        }
+        .hero-pricing h1 {
+            font-size: 64px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.05;
+            margin-bottom: 20px;
+        }
+        .hero-pricing h1 .accent { color: var(--accent); }
+        .hero-pricing p {
+            font-size: 18px; color: var(--text-secondary); line-height: 1.65; max-width: 560px;
+        }
+        @media (max-width: 640px) { .hero-pricing h1 { font-size: 40px; } }
+
+        .tiers-section { padding: 80px 0; border-bottom: 2px solid var(--border); background: #fff; }
+        .tiers {
+            display: grid; grid-template-columns: 1fr;
+            border: 2px solid var(--border); background: #000; gap: 2px;
+        }
+        @media (min-width: 960px) { .tiers { grid-template-columns: repeat(3, 1fr); } }
+        .tier {
+            background: #fff; padding: 40px 32px;
+            display: flex; flex-direction: column;
+        }
+        .tier.featured { background: #000; color: #fff; position: relative; }
+        .tier-tag {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+        .tier.featured .tier-tag { color: rgba(255,255,255,0.7); }
+        .tier h2 {
+            font-size: 28px; font-weight: 800; letter-spacing: -0.03em; text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .tier .price {
+            display: flex; align-items: baseline; gap: 8px;
+            padding-bottom: 24px; margin-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tier.featured .price { border-bottom-color: rgba(255,255,255,0.25); }
+        .tier .price .amount {
+            font-family: var(--font-mono); font-size: 44px; font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+        .tier .price .unit {
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+        .tier.featured .price .unit { color: rgba(255,255,255,0.7); }
+        .tier .price .amount.word { font-family: var(--font-sans); font-size: 34px; }
+
+        .tier .feat-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; flex: 1; }
+        .tier .feat-list li {
+            display: flex; gap: 12px; align-items: flex-start;
+            font-size: 13px; line-height: 1.5;
+        }
+        .tier .feat-list svg { width: 18px; height: 18px; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+        .tier.featured .feat-list svg { color: #fff; }
+
+        .tier-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 16px 28px; border: 0; cursor: pointer; text-align: center;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            transition: background 0.15s, color 0.15s;
+        }
+        .tier-btn.dark { background: #000; color: #fff; }
+        .tier-btn.dark:hover { background: var(--accent); }
+        .tier-btn.light { background: #fff; color: #000; }
+        .tier-btn.light:hover { background: var(--accent); color: #fff; }
+        .tier-btn.outline { background: #fff; color: #000; border: 2px solid var(--border); }
+        .tier-btn.outline:hover { background: #000; color: #fff; }
+
+        .featured-badge {
+            position: absolute; top: 0; right: 0;
+            background: var(--accent); color: #fff;
+            padding: 6px 14px;
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+        }
+
+        .addons { padding: 80px 0; background: var(--surface); border-bottom: 2px solid var(--border); }
+        .addons h2 {
+            font-size: 36px; font-weight: 800; letter-spacing: -0.035em; text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+        .addon-grid {
+            display: grid; grid-template-columns: 1fr;
+            border: 2px solid var(--border); background: #000; gap: 2px;
+        }
+        @media (min-width: 720px) { .addon-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .addon-grid { grid-template-columns: repeat(4, 1fr); } }
+        .addon { background: #fff; padding: 28px 24px; }
+        .addon .num {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--accent);
+            letter-spacing: 0.2em; margin-bottom: 14px;
+        }
+        .addon h3 {
+            font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.005em;
+            margin-bottom: 8px;
+        }
+        .addon p { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+        .addon .cost {
+            font-family: var(--font-mono); font-size: 13px; font-weight: 800;
+            margin-top: 14px; padding-top: 14px; border-top: 2px solid var(--border);
+        }
+
+        .faq-section { padding: 80px 0; border-bottom: 2px solid var(--border); background: #fff; }
+        .faq-section h2 {
+            font-size: 36px; font-weight: 800; letter-spacing: -0.035em; text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+        .faq-list {
+            border: 2px solid var(--border); display: grid; gap: 0; background: #000;
+        }
+        .faq-item { background: #fff; padding: 24px; border-bottom: 2px solid #000; }
+        .faq-item:last-child { border-bottom: 0; }
+        .faq-item h4 {
+            font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
+        .faq-item p { color: var(--text-secondary); font-size: 14px; line-height: 1.65; }
+
+        .cta-banner {
+            background: #000; color: #fff; padding: 56px 0;
+            border-bottom: 2px solid var(--border);
+        }
+        .cta-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+        .cta-text h3 {
+            font-size: 28px; font-weight: 800; letter-spacing: -0.025em; text-transform: uppercase;
+            margin-bottom: 6px; color: #fff;
+        }
+        .cta-text p {
+            color: rgba(255,255,255,0.65); font-family: var(--font-mono);
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em;
+        }
+        .btn-accent {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 16px 32px; background: var(--accent); color: #fff; border: 0;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            cursor: pointer; transition: background 0.15s, color 0.15s;
+        }
+        .btn-accent:hover { background: #fff; color: #000; }
+
+        footer { padding: 48px 0; background: #fff; }
+        .foot-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+        .foot-links {
+            display: flex; gap: 24px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+        .foot-links a:hover { color: #000; }
+        .foot-copy {
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="/" class="brand">
+        <div class="logo"></div>
+        <span class="name">Valence Diagnostics</span>
+    </a>
+    <div class="nav-links">
+        <a href="/#solutions" class="link">Solutions</a>
+        <a href="/#methodology" class="link">Methodology</a>
+        <a href="/pricing" class="link active">Pricing</a>
+        <a href="/contact" class="link">Contact</a>
+        <a href="/app" class="nav-cta">Client Login</a>
+    </div>
+</nav>
+
+<main>
+    <section class="hero-pricing">
+        <div class="container hero-pricing-inner">
+            <div class="pill">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 8h16M4 14h16M4 20h16"/></svg>
+                Transparent Pricing
+            </div>
+            <h1>Pay for what you <span class="accent">measure.</span></h1>
+            <p>Per-sample billing for small labs, fixed-monthly for high-volume commercial breeders, and bespoke enterprise contracts for integration into LIMS and breeding programs.</p>
+        </div>
+    </section>
+
+    <section class="tiers-section">
+        <div class="container">
+            <div class="tiers">
+                <div class="tier">
+                    <div class="tier-tag">01 · Starter</div>
+                    <h2>Field</h2>
+                    <div class="price">
+                        <span class="amount">€9</span>
+                        <span class="unit">/ Sample</span>
+                    </div>
+                    <ul class="feat-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Pay-as-you-go, no commitment
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Morphology analysis (image)
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Motility analysis (video, ≤ 60s)
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            PDF + JSON + CSV export
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Email support
+                        </li>
+                    </ul>
+                    <a href="/app" class="tier-btn outline">Start Analyzing</a>
+                </div>
+
+                <div class="tier featured">
+                    <span class="featured-badge">Most Popular</span>
+                    <div class="tier-tag">02 · Professional</div>
+                    <h2>Lab</h2>
+                    <div class="price">
+                        <span class="amount">€490</span>
+                        <span class="unit">/ Month</span>
+                    </div>
+                    <ul class="feat-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            <strong>200 samples / month included</strong>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Everything in Field, plus:
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Kinematic CASA breakdown
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Multi-user workspace
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Batch upload (bulk sessions)
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Priority processing queue
+                        </li>
+                    </ul>
+                    <a href="/contact" class="tier-btn light">Start 14-Day Trial</a>
+                </div>
+
+                <div class="tier">
+                    <div class="tier-tag">03 · Enterprise</div>
+                    <h2>Breeder</h2>
+                    <div class="price">
+                        <span class="amount word">Custom</span>
+                    </div>
+                    <ul class="feat-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Unlimited samples
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            LIMS integration (REST API)
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            On-prem / private-cloud deployment
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Custom model fine-tuning on your herd
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            Dedicated SLA + 24/7 support
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path stroke-linecap="square" d="M8 12l3 3 5-6"/></svg>
+                            SOC2 audit trail
+                        </li>
+                    </ul>
+                    <a href="/contact" class="tier-btn dark">Request Quote</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="addons">
+        <div class="container">
+            <h2>Add-Ons &amp; Overages</h2>
+            <div class="addon-grid">
+                <div class="addon">
+                    <div class="num">01</div>
+                    <h3>Extra Samples</h3>
+                    <p>Above the monthly allowance on Lab plans.</p>
+                    <div class="cost">€4 / SAMPLE</div>
+                </div>
+                <div class="addon">
+                    <div class="num">02</div>
+                    <h3>Archive Storage</h3>
+                    <p>Long-term retention of raw microscopy + reports.</p>
+                    <div class="cost">€0.05 / GB / MO</div>
+                </div>
+                <div class="addon">
+                    <div class="num">03</div>
+                    <h3>Whitelabel Reports</h3>
+                    <p>PDF reports co-branded with your lab identity.</p>
+                    <div class="cost">€49 / MONTH</div>
+                </div>
+                <div class="addon">
+                    <div class="num">04</div>
+                    <h3>Training Workshop</h3>
+                    <p>Half-day on-site onboarding for your technicians.</p>
+                    <div class="cost">€950 / SESSION</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <h2>Frequently Asked</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h4>How is a "sample" counted?</h4>
+                    <p>One sample equals one upload — either a microscopy image (morphology) or a video of up to 60 seconds (motility). Re-analyses of the same file within 24 hours are free.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I cancel anytime?</h4>
+                    <p>Yes. Lab subscriptions are month-to-month with no cancellation fee. Enterprise contracts follow the signed SLA term.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Do you offer academic or veterinary-school discounts?</h4>
+                    <p>Yes — non-commercial research labs receive a 40% discount on Lab plans. Contact us with institutional verification.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Where is my data stored?</h4>
+                    <p>EU data centers by default, with end-to-end encryption and auto-purge after 180 days unless archive storage is enabled. On-prem deployment is available on Enterprise.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-banner">
+        <div class="container cta-inner">
+            <div class="cta-text">
+                <h3>Not Sure Which Plan Fits?</h3>
+                <p>Talk to us · 15-minute discovery call</p>
+            </div>
+            <a href="/contact" class="btn-accent">
+                Book a Call
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="square" d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container foot-inner">
+            <a href="/" class="brand">
+                <div class="logo"></div>
+                <span class="name">Valence Diagnostics</span>
+            </a>
+            <div class="foot-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <div class="foot-copy">&copy; 2026 Valence Diagnostics.</div>
+        </div>
+    </footer>
+</main>
+</body>
+</html>

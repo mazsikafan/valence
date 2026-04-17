@@ -1,0 +1,156 @@
+{#  Shared auth page skeleton.
+    Pages extending this must set: {% block title %}, {% block heading %},
+    {% block subtitle %}, {% block form %}, {% block footnote %}.
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Authenticate{% endblock %} — Valence Diagnostics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --surface: #F4F4F4;
+            --border: #000000;
+            --text-primary: #000000;
+            --text-secondary: #4A4A4A;
+            --text-muted: #888888;
+            --accent: #005938;
+            --danger: #A31616;
+            --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-sans); background: var(--surface);
+            color: var(--text-primary); min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            position: relative; overflow-x: hidden;
+        }
+        body::before {
+            content: ""; position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, #000 1px, transparent 0);
+            background-size: 24px 24px; opacity: 0.03; pointer-events: none; z-index: 0;
+        }
+        ::selection { background: var(--accent); color: #fff; }
+        a { color: inherit; text-decoration: none; }
+
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 64px; z-index: 50;
+            background: #fff; border-bottom: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand .logo {
+            width: 24px; height: 24px; background: #000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .brand .logo::after { content: ""; width: 8px; height: 8px; background: #fff; }
+        .brand .name { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; text-transform: uppercase; }
+        .back-link {
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            color: #000; display: inline-flex; align-items: center; gap: 8px;
+            transition: color 0.15s;
+        }
+        .back-link:hover { color: var(--accent); }
+
+        .wrap {
+            position: relative; z-index: 1;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 96px 24px 48px;
+        }
+        .card {
+            background: #fff; border: 2px solid var(--border);
+            box-shadow: 12px 12px 0 0 rgba(0,0,0,1);
+            padding: 40px; width: 100%; max-width: 440px;
+        }
+        .glyph {
+            width: 48px; height: 48px; background: #000;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 28px;
+        }
+        .glyph svg { width: 22px; height: 22px; color: #fff; }
+        h1 {
+            font-size: 32px; font-weight: 800; letter-spacing: -0.035em;
+            text-transform: uppercase; line-height: 1.1; margin-bottom: 8px;
+        }
+        .sub {
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary); margin-bottom: 32px;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .field label {
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+        }
+        .field input {
+            width: 100%;
+            background: var(--surface); border: 2px solid var(--border);
+            padding: 13px 14px;
+            font-family: var(--font-sans); font-size: 14px; font-weight: 700; color: #000;
+            outline: none; transition: background 0.15s;
+        }
+        .field input::placeholder { color: var(--text-muted); font-weight: 500; }
+        .field input:focus { background: #fff; }
+
+        .submit-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 16px 20px;
+            background: #000; color: #fff; border: 0; cursor: pointer;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            transition: background 0.15s;
+            margin-top: 8px;
+        }
+        .submit-btn:hover { background: var(--accent); }
+        .submit-btn:disabled { background: #888; cursor: not-allowed; }
+
+        .err {
+            margin-top: 16px; padding: 12px 16px;
+            border: 2px solid var(--danger);
+            background: #FFF1F1; color: var(--danger);
+            font-family: var(--font-mono);
+            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em;
+        }
+
+        .foot {
+            margin-top: 28px; padding-top: 20px; border-top: 2px solid var(--border);
+            text-align: center;
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+        .foot a { color: #000; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+        .foot a:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <a href="/" class="brand">
+        <div class="logo"></div>
+        <span class="name">Valence Diagnostics</span>
+    </a>
+    <a href="/" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="square" d="M19 12H5m0 0l6 6m-6-6l6-6"/></svg>
+        Back Home
+    </a>
+</nav>
+
+<div class="wrap">
+    <div class="card">
+        <div class="glyph">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg>
+        </div>
+        <h1>{% block heading %}Client Portal{% endblock %}</h1>
+        <p class="sub">{% block subtitle %}Secure access for institutional partners.{% endblock %}</p>
+
+        {% if error %}<div class="err">{{ error }}</div>{% endif %}
+
+        {% block form %}{% endblock %}
+
+        <div class="foot">{% block footnote %}{% endblock %}</div>
+    </div>
+</div>
+</body>
+</html>

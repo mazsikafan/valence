@@ -1,0 +1,13 @@
+source,source_label,canonical_label,level
+synthetic_bovine,normal,normal,morphology
+synthetic_bovine,abnormal_head,abnormal_head,morphology
+synthetic_bovine,abnormal_midpiece,abnormal_midpiece,morphology
+synthetic_bovine,abnormal_tail,abnormal_tail,morphology
+synthetic_bovine,cytoplasmic_droplet,cytoplasmic_droplet,morphology
+synthetic_bovine,other_abnormal,other_abnormal,morphology
+roboflow_bovine,Head defect,abnormal_head,morphology
+roboflow_bovine,Tail defect,abnormal_tail,morphology
+roboflow_bovine,Normal,normal,morphology
+derived_tracking,static,immotile,motion
+derived_tracking,non_progressive,motile_non_progressive,motion
+derived_tracking,progressive,motile_progressive,motion

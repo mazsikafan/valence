@@ -1,0 +1,67 @@
+<div class="meta-note">This is a plain-language summary, not a substitute for legal advice. Please review with counsel before relying on it in a commercial context.</div>
+
+<h2>1. Who We Are</h2>
+<p>Valence Diagnostics ("we", "us") provides an AI-powered diagnostic platform for bovine genetic material. This policy explains what data we collect, why we collect it, and the rights you have over it.</p>
+<p>Questions? Write to <a href="mailto:privacy@valence-diagnostics.ai">privacy@valence-diagnostics.ai</a>.</p>
+
+<h2>2. What We Collect</h2>
+<h3>Account data</h3>
+<ul>
+    <li>Name, email, organization, hashed password (bcrypt — we never store plaintext passwords).</li>
+    <li>Session cookie identifier (HttpOnly, signed).</li>
+</ul>
+<h3>Uploaded samples</h3>
+<ul>
+    <li>Microscopy images and videos you upload, plus any metadata you enter (sample ID, bull ID, breed, lab name, operator, etc.).</li>
+    <li>Computed diagnostic results (morphology scores, motility metrics, kinematic parameters).</li>
+</ul>
+<h3>Operational data</h3>
+<ul>
+    <li>Server logs, IP addresses, browser user-agent — retained for security and debugging for up to 90 days.</li>
+</ul>
+
+<h2>3. Why We Collect It</h2>
+<ul>
+    <li><strong>Deliver the service.</strong> We can't analyze a sample you didn't upload.</li>
+    <li><strong>Authenticate you.</strong> Email + password hash is how we know who owns a workspace.</li>
+    <li><strong>Improve our models.</strong> Only with explicit opt-in consent from your account settings. We never use identifying metadata for model training.</li>
+    <li><strong>Legal compliance, fraud prevention, billing.</strong></li>
+</ul>
+
+<h2>4. Where Your Data Lives</h2>
+<p>Primary storage is in <strong>European Union data centers</strong>. We do not transfer customer samples outside the EU without written consent. Enterprise customers can opt for on-premises or private-cloud deployment.</p>
+
+<h2>5. Retention</h2>
+<ul>
+    <li>Uploaded samples and derived reports are retained for <strong>180 days by default</strong>, then deleted. Archive storage (see Pricing) extends this indefinitely.</li>
+    <li>Account data is retained as long as your account is active, plus 30 days after account deletion for backup recovery.</li>
+    <li>Server logs: 90 days.</li>
+</ul>
+
+<h2>6. Sharing</h2>
+<p>We do not sell personal data. We share only with:</p>
+<ul>
+    <li>Hosting providers (AWS Frankfurt / Hetzner) under GDPR-compliant data-processing agreements.</li>
+    <li>Payment processors (Stripe) to process subscriptions.</li>
+    <li>Law enforcement, when compelled by a valid legal process.</li>
+</ul>
+
+<h2>7. Your Rights</h2>
+<p>Under GDPR and similar regimes, you can:</p>
+<ul>
+    <li>Access a copy of your data (self-service export in the engine, or email us).</li>
+    <li>Correct inaccurate data.</li>
+    <li>Request deletion of your account and associated samples.</li>
+    <li>Withdraw consent to model-training use at any time.</li>
+    <li>Lodge a complaint with your local data-protection authority.</li>
+</ul>
+<p>Email <a href="mailto:privacy@valence-diagnostics.ai">privacy@valence-diagnostics.ai</a> and we'll respond within 30 days.</p>
+
+<h2>8. Security</h2>
+<p>Passwords are hashed with bcrypt (12 rounds). Sessions ride on signed HttpOnly cookies. TLS is enforced on all production traffic. We run routine vulnerability scans and commit to disclosing material security incidents within 72 hours.</p>
+
+<h2>9. Cookies</h2>
+<p>We use a single strictly-necessary cookie (<code>valence_session</code>) to keep you signed in. We do not use third-party analytics or advertising cookies.</p>
+
+<h2>10. Changes</h2>
+<p>We'll post an updated policy here and notify account holders by email of any material change at least 14 days before it takes effect.</p>

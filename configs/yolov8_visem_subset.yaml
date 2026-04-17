@@ -1,0 +1,8 @@
+path: /Users/balintmaroti/Documents/bull_sperm/data/processed/visem_yolo_subset
+train: train/images
+val: val/images
+nc: 3
+names:
+  0: sperm
+  1: cluster
+  2: small_pinhead

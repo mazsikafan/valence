@@ -1,0 +1,15 @@
+path: /Users/balintmaroti/Documents/bull_sperm/data/raw/bovine/roboflow_bovine_sperm/Bovine-sperm-cells-test-1
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 8
+names:
+  0: agglutination
+  1: coiled-tail
+  2: distal-droplet
+  3: folded-tail
+  4: loose-head
+  5: normal
+  6: others
+  7: proximal-droplet

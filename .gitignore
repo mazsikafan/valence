@@ -1,0 +1,102 @@
+# ── OS / editor ────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# ── Claude Code local state (per-dev machine) ──────────────────
+.claude/settings.local.json
+
+# ── Python ─────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+.tox/
+.venv/
+venv/
+env/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ── Secrets & env ──────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+secrets/
+
+# ── App data (runtime artifacts — large/sensitive) ────────────
+uploads/
+results/
+reports/
+outputs/
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+valence.db
+bovinevision.db
+
+# ── ML artifacts (large binaries — use DVC/S3/Git-LFS if needed)
+# Trained model weights
+models/*.pt
+models/*.pkl
+models/*.onnx
+models/*.pth
+models/*.h5
+runs/
+mlruns/
+wandb/
+yolov8n.pt
+yolov8s.pt
+yolov8m.pt
+yolov8l.pt
+yolov8x.pt
+*.weights
+
+# ── Datasets (never commit raw data) ───────────────────────────
+data/raw/
+data/interim/
+data/processed/
+data/external/
+data/human_transfer/
+data/tabular/
+data/bovine/
+
+# ── Notebooks checkpoints ──────────────────────────────────────
+.ipynb_checkpoints/
+notebooks/**/.ipynb_checkpoints/
+
+# ── Logs ───────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Node / frontend (for valence-diagnostics reference app) ────
+valence-diagnostics/node_modules/
+valence-diagnostics/dist/
+valence-diagnostics/.vite/
+node_modules/
+
+# ── Docker ─────────────────────────────────────────────────────
+.docker/
+
+# ── Misc ───────────────────────────────────────────────────────
+*.pid
+.cache/

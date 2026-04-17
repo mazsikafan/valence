@@ -1,0 +1,52 @@
+# VCS & OS
+.git/
+.gitignore
+.DS_Store
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Runtime artifacts — mount as volumes instead
+uploads/
+results/
+reports/
+outputs/
+*.db
+*.db-journal
+
+# Datasets — never bake into image
+data/raw/
+data/interim/
+data/processed/
+data/external/
+data/human_transfer/
+data/tabular/
+
+# ML artifacts — bake in only what you ship; use volumes otherwise
+runs/
+mlruns/
+wandb/
+
+# Dev tooling
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+notebooks/
+
+# Design reference app (not part of runtime)
+valence-diagnostics/
+
+# Docs / markdown (not needed at runtime)
+*.md
+!README.md
+
+# Local logs
+*.log
+logs/

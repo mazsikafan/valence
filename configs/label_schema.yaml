@@ -1,0 +1,63 @@
+morphology_labels:
+  hierarchy: cell-level
+  classes:
+    normal:
+      code: 0
+      description: Normal morphology, no visible defects
+    abnormal_head:
+      code: 1
+      description: 'Head defects: pyriform, round, macro, micro, detached'
+    abnormal_midpiece:
+      code: 2
+      description: 'Midpiece defects: bent, thickened, thin'
+    abnormal_tail:
+      code: 3
+      description: 'Tail defects: coiled, short, bent, absent'
+    cytoplasmic_droplet:
+      code: 4
+      description: Proximal or distal cytoplasmic droplet
+    other_abnormal:
+      code: 5
+      description: Other abnormalities not classified above
+    uncertain:
+      code: 6
+      description: Cannot determine class from available data
+motion_labels:
+  hierarchy: track-level
+  classes:
+    immotile:
+      code: 0
+      description: No meaningful displacement
+    motile_non_progressive:
+      code: 1
+      description: Moving but no forward progress
+    motile_progressive:
+      code: 2
+      description: Moving with sustained forward progress
+    uncertain:
+      code: 3
+      description: Cannot determine motility state
+sample_labels:
+  hierarchy: sample-level
+  numeric_targets:
+  - concentration_M_per_mL
+  - total_motility_pct
+  - progressive_motility_pct
+  - morphology_normal_pct
+  - fertility_proxy
+  class_targets:
+    quality_class:
+      classes:
+      - pass
+      - review
+      - reject
+    post_thaw_flag:
+      classes:
+      - fresh
+      - frozen_thawed
+confidence_tiers:
+  gold: Expert human annotation, high confidence
+  silver: Curated or consensus annotation
+  bronze: Derived or weak label
+  synthetic: Simulator-generated
+  unknown: Provenance unclear
