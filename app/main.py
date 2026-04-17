@@ -476,6 +476,109 @@ async def upload_video(
     return {"job_id": job_id, "status": "queued", "message": "Video motility analysis started"}
 
 
+# ── Batch upload (folders / multi-file) ──────────────────────────────────────
+#
+# The engine accepts a list of files — typically from an HTML folder picker
+# (<input webkitdirectory>). Each file is classified by extension, routed to
+# the right pipeline, and gets its own Job row so status/reports per file
+# remain independent. The response includes a batch_id the client uses to
+# display per-file progress.
+
+def _classify_upload(filename: str) -> str:
+    name = (filename or "").lower()
+    if name.endswith(_IMAGE_EXTS):
+        return "image"
+    if name.endswith(_VIDEO_EXTS):
+        return "motility"
+    return "unsupported"
+
+
+@app.post("/api/upload/batch")
+async def upload_batch(
+    background_tasks: BackgroundTasks,
+    files: list[UploadFile] = File(...),
+    sample_id: str = Form(""), bull_id: str = Form(""),
+    breed: str = Form(""), collection_date: str = Form(""),
+    fresh_thawed: str = Form(""), lab_name: str = Form(""),
+    operator: str = Form(""), magnification: str = Form(""),
+    user: User = Depends(require_user),
+    db: Session = Depends(get_session),
+):
+    if not files:
+        raise HTTPException(400, "No files provided")
+
+    batch_id = uuid.uuid4().hex[:10]
+    shared_info = _safe_sample_info(
+        sample_id=sample_id, bull_id=bull_id, breed=breed,
+        collection_date=collection_date, fresh_thawed=fresh_thawed,
+        lab_name=lab_name, operator=operator, magnification=magnification,
+    )
+
+    accepted: list[dict] = []
+    skipped: list[dict] = []
+
+    for upload in files:
+        raw_name = upload.filename or ""
+        # Folder uploads set `webkitRelativePath` which the browser puts in
+        # the filename; take the basename so we don't smuggle paths.
+        basename = Path(raw_name).name
+        job_type = _classify_upload(basename)
+
+        if job_type == "unsupported":
+            skipped.append({"filename": basename or "(unnamed)", "reason": "unsupported file type"})
+            continue
+
+        job_id = uuid.uuid4().hex[:8]
+        allowed = _IMAGE_EXTS if job_type == "image" else _VIDEO_EXTS
+        try:
+            saved_path = _save_upload(upload, job_id, allowed)
+        except HTTPException as exc:
+            skipped.append({"filename": basename, "reason": exc.detail})
+            continue
+
+        per_file_info = {**shared_info, "sample_id": shared_info["sample_id"] or basename or job_id}
+
+        job = Job(
+            job_id=job_id,
+            user_id=user.id,
+            job_type=job_type,
+            status="queued",
+            filename=basename,
+            sample_info_json=json.dumps(per_file_info),
+        )
+        db.add(job)
+        db.flush()
+
+        runner = run_image_job if job_type == "image" else run_video_job
+        background_tasks.add_task(runner, job_id, str(saved_path), per_file_info)
+
+        accepted.append({
+            "job_id": job_id,
+            "filename": basename,
+            "type": job_type,
+            "status": "queued",
+        })
+
+    db.commit()
+
+    if not accepted:
+        raise HTTPException(400, "No supported files in batch. Allowed: "
+                                  f"{', '.join(_IMAGE_EXTS + _VIDEO_EXTS)}")
+
+    return {
+        "batch_id": batch_id,
+        "accepted": accepted,
+        "skipped": skipped,
+        "counts": {
+            "total": len(files),
+            "accepted": len(accepted),
+            "skipped": len(skipped),
+            "images": sum(1 for j in accepted if j["type"] == "image"),
+            "videos": sum(1 for j in accepted if j["type"] == "motility"),
+        },
+    }
+
+
 # ── Job / report endpoints ───────────────────────────────────────────────────
 
 def _get_job_for_user(job_id: str, user: User, db: Session) -> Job:

@@ -77,6 +77,17 @@ STATIC_DIR = Path(__file__).parent / "static"
 
 # ── Database ─────────────────────────────────────────────────────────────────
 DATABASE_URL = _env("DATABASE_URL", f"sqlite:///{PROJECT_ROOT / 'valence.db'}")
+DB_POOL_SIZE = _env_int("DB_POOL_SIZE", 10)
+DB_MAX_OVERFLOW = _env_int("DB_MAX_OVERFLOW", 20)
+DB_POOL_TIMEOUT = _env_int("DB_POOL_TIMEOUT", 30)
+
+if IS_PRODUCTION and DATABASE_URL.startswith("sqlite"):
+    import warnings
+    warnings.warn(
+        "Running in production with SQLite. Set DATABASE_URL to a Postgres URL "
+        "(postgresql+psycopg://...) before serving real traffic.",
+        stacklevel=2,
+    )
 
 # ── Uploads ──────────────────────────────────────────────────────────────────
 MAX_UPLOAD_MB = _env_int("MAX_UPLOAD_MB", 500)

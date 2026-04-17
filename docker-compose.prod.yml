@@ -1,0 +1,74 @@
+# ── Valence Diagnostics — production stack ───────────────────────
+# Usage:
+#   1. cp .env.example .env.prod   → fill in SESSION_SECRET + POSTGRES_PASSWORD
+#   2. docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+#   3. Put a TLS-terminating reverse proxy in front (Caddy/Nginx/Cloudflare).
+#
+# Healthchecks gate startup order: the app waits for Postgres before booting.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-valence}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.prod}
+      POSTGRES_DB: ${POSTGRES_DB:-valence}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-valence} -d ${POSTGRES_DB:-valence}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    # No published port by default — app reaches it via the compose network.
+    # Uncomment to expose locally for psql/pgAdmin:
+    # ports:
+    #   - "127.0.0.1:5432:5432"
+
+  valence:
+    build: .
+    image: valence-diagnostics:prod
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8765:8765"
+    environment:
+      APP_ENV: production
+      APP_HOST: 0.0.0.0
+      APP_PORT: "8765"
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env.prod}
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-valence_session}
+      SESSION_MAX_AGE_SECONDS: ${SESSION_MAX_AGE_SECONDS:-1209600}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-valence}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-valence}
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
+      DB_MAX_OVERFLOW: ${DB_MAX_OVERFLOW:-20}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-500}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://valence-diagnostics.ai}
+      APP_BASE_URL: ${APP_BASE_URL:-https://valence-diagnostics.ai}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-no-reply@valence-diagnostics.ai}
+      CONTACT_FORWARD_TO: ${CONTACT_FORWARD_TO:-}
+    volumes:
+      - uploads:/app/uploads
+      - results:/app/results
+      - ./models:/app/models:ro
+      - ./runs:/app/runs:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8765/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  pgdata:
+  uploads:
+  results:

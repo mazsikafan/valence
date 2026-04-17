@@ -12,16 +12,30 @@ from typing import Optional
 from sqlalchemy import String, Integer, DateTime, Text, Boolean, ForeignKey, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, sessionmaker, Session
 
-from app.config import DATABASE_URL
+from app.config import (
+    DATABASE_URL, DB_POOL_SIZE, DB_MAX_OVERFLOW, DB_POOL_TIMEOUT, IS_PRODUCTION,
+)
 
 
 # ── Engine / session ─────────────────────────────────────────────────────────
-# check_same_thread=False is required for SQLite when FastAPI uses threads.
-_engine_kwargs = {}
+# Backend-specific engine kwargs:
+#   SQLite needs check_same_thread=False when FastAPI uses threads, and
+#   doesn't use a real connection pool.
+#   Postgres benefits from pool_pre_ping (dead-connection detection across
+#   container restarts) and explicit pool sizing under concurrent load.
+_engine_kwargs: dict = {"future": True}
 if DATABASE_URL.startswith("sqlite"):
     _engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    _engine_kwargs.update(
+        pool_pre_ping=True,
+        pool_size=DB_POOL_SIZE,
+        max_overflow=DB_MAX_OVERFLOW,
+        pool_timeout=DB_POOL_TIMEOUT,
+        pool_recycle=1800,  # recycle connections after 30 min
+    )
 
-engine = create_engine(DATABASE_URL, future=True, **_engine_kwargs)
+engine = create_engine(DATABASE_URL, **_engine_kwargs)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, future=True)
 
 

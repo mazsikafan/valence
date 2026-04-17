@@ -282,14 +282,53 @@ First visit `/signup` to create an account. The diagnostic engine at `/app` is
 auth-gated; the marketing site at `/`, `/pricing`, `/contact`, `/privacy`, and
 `/terms` is public.
 
-## Quick Start — Docker
+## Quick Start — Docker (single-container, SQLite)
 
 ```bash
 cp .env.example .env     # edit SESSION_SECRET
 docker compose up --build
 ```
 
-The compose file mounts `uploads/`, `results/`, `models/`, and `runs/` as
+## Production — app + Postgres
+
+`docker-compose.prod.yml` brings up the app alongside a managed Postgres.
+Create a `.env.prod` file with at least these two variables, then bring
+the stack up:
+
+```bash
+cat > .env.prod <<EOF
+SESSION_SECRET=$(python -c "import secrets; print(secrets.token_urlsafe(48))")
+POSTGRES_PASSWORD=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+APP_BASE_URL=https://valence-diagnostics.ai
+CORS_ORIGINS=https://valence-diagnostics.ai
+EOF
+
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+docker compose -f docker-compose.prod.yml logs -f valence
+```
+
+The compose file pins `postgres:16-alpine`, puts data on a named volume
+(`pgdata`), and gates the app's startup on a Postgres healthcheck so the
+first `create_all()` succeeds. Mount a TLS-terminating reverse proxy
+(Caddy, Nginx, or Cloudflare) in front — the app only speaks HTTP.
+
+### Migrating an existing SQLite DB to Postgres
+
+Ad-hoc is fine for the first few users:
+
+```bash
+sqlite3 valence.db .dump | \
+  sed -e 's/AUTOINCREMENT/GENERATED ALWAYS AS IDENTITY/g' \
+      -e 's/PRAGMA.*;//' | \
+  psql "postgresql://valence:PW@host:5432/valence"
+```
+
+For anything bigger, use [pgloader](https://pgloader.io) — one command
+and it handles schema, types, and indexes.
+
+### Volumes
+
+The compose files mount `uploads/`, `results/`, `models/`, and `runs/` as
 volumes so data survives rebuilds. `models/` and `runs/` are read-only at
 runtime — build-time artifacts should not be written from the app.
 
@@ -322,7 +361,8 @@ Auth:
 
 Authenticated engine:
 - `GET /app` — upload UI + recent jobs (per-user)
-- `POST /api/upload`, `/api/upload/video` — submit samples
+- `POST /api/upload`, `/api/upload/video` — submit a single sample
+- `POST /api/upload/batch` — submit many files (folder upload, mixed images + videos). Server auto-classifies by extension, routes images → morphology pipeline and videos → motility pipeline, and returns one job_id per accepted file + a list of skipped files with reasons.
 - `GET /api/analysis/{job_id}` — poll status
 - `GET /api/report/{job_id}/{pdf|json|csv|html|tracks}` — exports
 - `GET /api/history` — user's job history

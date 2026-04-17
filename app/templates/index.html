@@ -418,6 +418,153 @@
             color: #fff; flex-shrink: 0;
         }
 
+        /* ── Staged files panel ─────────────────────────────────────── */
+        .staged {
+            margin-top: 24px;
+            border: 2px solid var(--border); background: #fff;
+        }
+        .staged-head {
+            background: #000; color: #fff;
+            padding: 14px 20px;
+            display: flex; align-items: center; gap: 16px;
+            font-family: var(--font-mono);
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            flex-wrap: wrap;
+        }
+        .staged-head .title { flex: 1 1 auto; min-width: 120px; }
+        .staged-head .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .staged-head .chip {
+            padding: 3px 10px; background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            font-size: 10px; letter-spacing: 0.15em;
+        }
+        .staged-head .chip.image { border-color: #22c55e; color: #bbf7d0; }
+        .staged-head .chip.motility { border-color: #60a5fa; color: #bfdbfe; }
+        .staged-head .chip.skipped { border-color: #fca5a5; color: #fecaca; }
+        .staged-head .btn-clear {
+            background: #fff; color: #000; border: 0;
+            padding: 6px 14px;
+            font-family: inherit; font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            cursor: pointer;
+        }
+        .staged-head .btn-clear:hover { background: var(--accent); color: #fff; }
+        .staged-list {
+            max-height: 280px; overflow-y: auto;
+            border-top: 2px solid var(--border);
+        }
+        .staged-row {
+            display: grid; grid-template-columns: 1fr auto auto;
+            align-items: center; gap: 12px;
+            padding: 12px 20px;
+            border-bottom: 1px solid #E4E4E4;
+            font-size: 13px;
+        }
+        .staged-row:last-child { border-bottom: 0; }
+        .staged-row.skipped { background: #FFF1F1; }
+        .staged-row .fname {
+            font-family: var(--font-mono); font-weight: 700;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .staged-row .fpath {
+            font-size: 10px; color: var(--text-muted); font-weight: 500;
+            font-family: var(--font-mono);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            margin-top: 2px;
+        }
+        .type-chip {
+            font-size: 9px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            padding: 4px 10px; border: 2px solid #000;
+        }
+        .type-chip.image { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .type-chip.motility { background: #000; color: #fff; }
+        .type-chip.skipped { background: #FFF1F1; color: var(--danger); border-color: var(--danger); }
+        .row-remove {
+            background: none; border: 0; cursor: pointer;
+            color: var(--text-muted); font-size: 16px; line-height: 1;
+            padding: 4px 8px;
+        }
+        .row-remove:hover { color: #000; }
+
+        /* ── Batch progress panel ───────────────────────────────────── */
+        .batch-panel {
+            border: 2px solid var(--border); background: #fff;
+            box-shadow: 8px 8px 0 0 rgba(0,0,0,1);
+        }
+        .batch-head {
+            background: #000; color: #fff;
+            padding: 18px 24px;
+            display: flex; justify-content: space-between; align-items: center; gap: 16px;
+            flex-wrap: wrap;
+        }
+        .batch-head h2 {
+            font-size: 20px; font-weight: 800;
+            letter-spacing: -0.025em; text-transform: uppercase;
+        }
+        .batch-head .sub {
+            margin-top: 4px;
+            font-family: var(--font-mono);
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.7);
+        }
+        .batch-head .bar-wrap {
+            width: 240px; max-width: 40vw;
+            height: 8px; background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative; overflow: hidden;
+        }
+        .batch-head .bar-fill {
+            position: absolute; top: 0; left: 0; height: 100%;
+            background: var(--accent); width: 0%;
+            transition: width 0.4s;
+        }
+        .batch-list { display: flex; flex-direction: column; }
+        .batch-row {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            align-items: center; gap: 14px;
+            padding: 14px 24px;
+            border-bottom: 1px solid #E4E4E4;
+            font-size: 13px;
+        }
+        .batch-row:last-child { border-bottom: 0; }
+        .batch-row .row-num {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+            color: var(--text-muted);
+        }
+        .batch-row .row-file {
+            min-width: 0;
+            font-family: var(--font-mono); font-weight: 700;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .status-chip {
+            font-size: 9px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            padding: 4px 10px; border: 2px solid #000;
+        }
+        .status-chip.queued { background: #fff; color: #000; }
+        .status-chip.processing { background: #B45309; color: #fff; border-color: #B45309; }
+        .status-chip.completed { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .status-chip.failed { background: var(--danger); color: #fff; border-color: var(--danger); }
+        .row-link {
+            font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.2em;
+            color: #000; text-decoration: underline;
+            text-decoration-thickness: 2px; text-underline-offset: 3px;
+        }
+        .row-link:hover { color: var(--accent); }
+        .row-link.disabled {
+            color: #CCC; pointer-events: none; text-decoration-color: #CCC;
+        }
+        .batch-actions {
+            padding: 20px 24px;
+            border-top: 2px solid var(--border);
+            display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end;
+        }
+
         /* ── Footer ─────────────────────────────────────────────────── */
         footer {
             border-top: 2px solid var(--border);
@@ -472,28 +619,43 @@
 
     <form id="upload-form" enctype="multipart/form-data">
         <div class="mode-toggle">
-            <button type="button" class="mode-btn active" id="mode-image" onclick="setMode('image')">
+            <button type="button" class="mode-btn active" id="mode-files" onclick="setSource('files')">
                 <span class="mode-num">01</span>
-                Morphology · Image
+                Files · One or Many
             </button>
-            <button type="button" class="mode-btn" id="mode-video" onclick="setMode('video')">
+            <button type="button" class="mode-btn" id="mode-folder" onclick="setSource('folder')">
                 <span class="mode-num">02</span>
-                Motility · Video
+                Folder · Bulk
             </button>
         </div>
 
-        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <div class="drop-zone" id="drop-zone">
             <div class="icon-box">
-                <svg id="upload-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="square" stroke-linejoin="miter" d="M4 16v4h16v-4M12 4v12m0-12l-4 4m4-4l4 4"/>
                 </svg>
             </div>
-            <h3 id="upload-text">Upload Microscopy Image</h3>
-            <p id="upload-hint">Drag &amp; drop high-resolution files (JPG, PNG, TIFF, BMP) or click to browse. Maximum file size 500MB.</p>
-            <button type="button" class="btn btn-primary">Select File</button>
-            <div class="file-name" id="file-name"></div>
+            <h3 id="upload-text">Upload Microscopy Files</h3>
+            <p id="upload-hint">Drop images (JPG · PNG · TIFF · BMP) or videos (MP4 · AVI · MOV · MKV). Images route to morphology; videos route to motility. Mixed batches are fine.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+                <button type="button" class="btn btn-primary" id="pick-files-btn">Select Files</button>
+                <button type="button" class="btn btn-outline" id="pick-folder-btn">Select Folder</button>
+            </div>
         </div>
-        <input type="file" id="file-input" name="file" accept=".jpg,.jpeg,.png,.tiff,.tif,.bmp" style="display:none">
+        <input type="file" id="file-input" name="files" multiple
+               accept=".jpg,.jpeg,.png,.tiff,.tif,.bmp,.mp4,.avi,.mov,.mkv"
+               style="display:none">
+        <input type="file" id="folder-input" name="files" multiple webkitdirectory directory mozdirectory
+               style="display:none">
+
+        <div class="staged" id="staged" style="display:none">
+            <div class="staged-head">
+                <span class="title" id="staged-title">Staged Files</span>
+                <span class="chips" id="staged-counts"></span>
+                <button type="button" class="btn-clear" id="clear-staged">Clear</button>
+            </div>
+            <div class="staged-list" id="staged-list"></div>
+        </div>
 
         <div class="sample-form">
             <div class="form-header">
@@ -547,8 +709,8 @@
                 </div>
 
                 <div class="submit-row">
-                    <button type="submit" class="btn btn-primary" id="submit-btn">
-                        Analyze Sample
+                    <button type="submit" class="btn btn-primary" id="submit-btn" disabled>
+                        <span id="submit-label">Select Files to Analyze</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="square" stroke-linejoin="miter" d="M5 12h14m0 0l-6-6m6 6l-6 6"/>
                         </svg>
@@ -558,73 +720,17 @@
         </div>
     </form>
 
-    <div class="progress-section" id="progress" style="margin-top:32px">
-        <div class="spinner"></div>
-        <h3>Valuating Sample…</h3>
-        <p class="sub" id="progress-text">Running Computer Vision Pipeline</p>
-        <div class="target" id="progress-target">TARGET: —</div>
-        <div class="progress-bar"><div class="progress-bar-fill"></div></div>
-    </div>
-
-    <div class="results" id="result-card" style="margin-top:32px">
-        <div class="results-header">
-            <div>
-                <h2>Valuation Report</h2>
-                <p class="file-label" id="result-file">FILE: —</p>
+    <div class="batch-panel" id="batch-panel" style="display:none;margin-top:32px">
+        <div class="batch-head">
+            <div style="min-width:0;flex:1">
+                <h2>Batch Progress</h2>
+                <p class="sub" id="batch-sub">0 / 0 completed</p>
             </div>
-            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-                <span class="quality-badge quality-unknown" id="quality-badge">—</span>
-                <button class="btn btn-outline" onclick="resetForm()">New Analysis</button>
-            </div>
+            <div class="bar-wrap"><div class="bar-fill" id="batch-bar"></div></div>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-box">
-                <div class="label" id="label-0">Total Cells</div>
-                <div class="value" id="stat-total">—</div>
-                <div class="delta" id="delta-0"></div>
-            </div>
-            <div class="stat-box">
-                <div class="label" id="label-1">Normal %</div>
-                <div class="value" id="stat-normal">—</div>
-                <div class="delta" id="delta-1"></div>
-            </div>
-            <div class="stat-box">
-                <div class="label" id="label-2">Abnormal %</div>
-                <div class="value" id="stat-abnormal">—</div>
-                <div class="delta" id="delta-2"></div>
-            </div>
-            <div class="stat-box accent">
-                <div class="label">Processing Time</div>
-                <div class="value" id="stat-time">—</div>
-                <div class="delta">SECONDS · DETERMINISTIC</div>
-            </div>
-        </div>
-
-        <div class="summary-card" style="margin-bottom:28px">
-            <h3>AI Diagnostic Summary</h3>
-            <p class="body" id="diagnostic-summary">
-                Awaiting analysis results.
-            </p>
-
-            <div class="download-row">
-                <button class="download-btn" id="btn-pdf">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M14 2H6v20h12V6l-4-4zm0 0v4h4"/></svg>
-                    Export PDF
-                </button>
-                <button class="download-btn" id="btn-json">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 6h16M4 12h16M4 18h10"/></svg>
-                    Export JSON
-                </button>
-                <button class="download-btn" id="btn-csv">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 4h16v16H4V4zm0 6h16M10 4v16"/></svg>
-                    Export CSV
-                </button>
-                <button class="download-btn" id="btn-html">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="square" d="M4 4h16v16H4V4zm0 4h16"/></svg>
-                    Full Report
-                </button>
-            </div>
+        <div class="batch-list" id="batch-list"></div>
+        <div class="batch-actions" id="batch-actions" style="display:none">
+            <button type="button" class="btn btn-outline" onclick="resetBatch()">New Batch</button>
         </div>
     </div>
 
@@ -662,133 +768,305 @@
 const dropZone = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
 const form = document.getElementById('upload-form');
-const progress = document.getElementById('progress');
-const resultCard = document.getElementById('result-card');
-let currentJobId = null;
-let currentMode = 'image';
+const folderInput = document.getElementById('folder-input');
+const batchPanel = document.getElementById('batch-panel');
+const batchList = document.getElementById('batch-list');
+const submitBtn = document.getElementById('submit-btn');
+const submitLabel = document.getElementById('submit-label');
+const stagedPanel = document.getElementById('staged');
+const stagedListEl = document.getElementById('staged-list');
+const stagedCountsEl = document.getElementById('staged-counts');
+const stagedTitleEl = document.getElementById('staged-title');
 
-function setMode(mode) {
-    currentMode = mode;
-    document.getElementById('mode-image').classList.toggle('active', mode === 'image');
-    document.getElementById('mode-video').classList.toggle('active', mode === 'video');
-    if (mode === 'video') {
-        document.getElementById('upload-text').textContent = 'Upload Microscopy Video';
-        document.getElementById('upload-hint').textContent = 'Drag & drop high-resolution video (MP4, AVI, MOV, MKV) or click to browse.';
-        fileInput.accept = '.mp4,.avi,.mov,.mkv';
-    } else {
-        document.getElementById('upload-text').textContent = 'Upload Microscopy Image';
-        document.getElementById('upload-hint').textContent = 'Drag & drop high-resolution files (JPG, PNG, TIFF, BMP) or click to browse. Maximum file size 500MB.';
-        fileInput.accept = '.jpg,.jpeg,.png,.tiff,.tif,.bmp';
-    }
+const IMAGE_EXTS = ['.jpg', '.jpeg', '.png', '.tiff', '.tif', '.bmp'];
+const VIDEO_EXTS = ['.mp4', '.avi', '.mov', '.mkv'];
+
+// `staged` holds { file: File, path: string, type: 'image'|'motility'|'skipped' }
+let staged = [];
+const pollers = new Map();   // job_id → setTimeout id
+
+function classify(name) {
+    const n = (name || '').toLowerCase();
+    if (IMAGE_EXTS.some(e => n.endsWith(e))) return 'image';
+    if (VIDEO_EXTS.some(e => n.endsWith(e))) return 'motility';
+    return 'skipped';
 }
 
-function resetForm() {
-    resultCard.classList.remove('active');
-    form.style.display = 'block';
-    document.getElementById('file-name').textContent = '';
+function setSource(which) {
+    document.getElementById('mode-files').classList.toggle('active', which === 'files');
+    document.getElementById('mode-folder').classList.toggle('active', which === 'folder');
+    if (which === 'folder') folderInput.click();
+    else fileInput.click();
+}
+
+function addFiles(fileList) {
+    const existing = new Set(staged.map(s => s.path));
+    for (const f of fileList) {
+        const path = f.webkitRelativePath || f.name;
+        if (existing.has(path)) continue;
+        staged.push({ file: f, path, name: f.name, type: classify(f.name) });
+    }
+    renderStaged();
+}
+
+function removeStaged(idx) {
+    staged.splice(idx, 1);
+    renderStaged();
+}
+
+function clearStaged() {
+    staged = [];
     fileInput.value = '';
-    document.getElementById('submit-btn').disabled = false;
+    folderInput.value = '';
+    renderStaged();
 }
 
-['dragenter','dragover'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.add('dragover'); }));
-['dragleave','drop'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.remove('dragover'); }));
-dropZone.addEventListener('drop', e => { fileInput.files = e.dataTransfer.files; showFileName(); });
-fileInput.addEventListener('change', showFileName);
+function renderStaged() {
+    const counts = { image: 0, motility: 0, skipped: 0 };
+    staged.forEach(s => counts[s.type]++);
+    const processable = counts.image + counts.motility;
 
-function showFileName() {
-    if (fileInput.files.length > 0) {
-        document.getElementById('file-name').textContent = fileInput.files[0].name;
+    if (staged.length === 0) {
+        stagedPanel.style.display = 'none';
+        submitBtn.disabled = true;
+        submitLabel.textContent = 'Select Files to Analyze';
+        return;
+    }
+
+    stagedPanel.style.display = 'block';
+    stagedTitleEl.textContent = 'Staged Files · ' + staged.length;
+    stagedCountsEl.innerHTML = [
+        counts.image    ? `<span class="chip image">${counts.image} IMAGE${counts.image>1?'S':''}</span>` : '',
+        counts.motility ? `<span class="chip motility">${counts.motility} VIDEO${counts.motility>1?'S':''}</span>` : '',
+        counts.skipped  ? `<span class="chip skipped">${counts.skipped} SKIPPED</span>` : '',
+    ].join('');
+
+    stagedListEl.innerHTML = staged.map((s, i) => {
+        const label = s.type === 'motility' ? 'Video'
+                    : s.type === 'image'    ? 'Image'
+                    :                          'Unsupported';
+        const pathDisp = s.path !== s.name ? `<div class="fpath">${escapeHtml(s.path)}</div>` : '';
+        return `
+          <div class="staged-row ${s.type === 'skipped' ? 'skipped' : ''}">
+            <div style="min-width:0">
+              <div class="fname">${escapeHtml(s.name)}</div>
+              ${pathDisp}
+            </div>
+            <span class="type-chip ${s.type}">${label}</span>
+            <button type="button" class="row-remove" title="Remove" onclick="removeStaged(${i})">✕</button>
+          </div>`;
+    }).join('');
+
+    submitBtn.disabled = processable === 0;
+    if (processable === 0) {
+        submitLabel.textContent = 'No supported files selected';
+    } else if (processable === 1) {
+        submitLabel.textContent = 'Analyze Sample';
+    } else {
+        submitLabel.textContent = `Analyze ${processable} Samples`;
     }
 }
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!fileInput.files.length) { alert('Please select a file'); return; }
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+}
 
-    const formData = new FormData(form);
-    document.getElementById('submit-btn').disabled = true;
-    progress.classList.add('active');
-    resultCard.classList.remove('active');
-    document.getElementById('progress-target').textContent = 'TARGET: ' + fileInput.files[0].name;
+// ── Drag-and-drop (supports folders via webkitGetAsEntry) ───────
+['dragenter','dragover'].forEach(e => dropZone.addEventListener(e, ev => {
+    ev.preventDefault(); dropZone.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(e => dropZone.addEventListener(e, ev => {
+    ev.preventDefault(); dropZone.classList.remove('dragover');
+}));
 
-    try {
-        const endpoint = currentMode === 'video' ? '/api/upload/video' : '/api/upload';
-        const resp = await fetch(endpoint, { method: 'POST', body: formData });
-        const data = await resp.json();
-        currentJobId = data.job_id;
-        pollStatus();
-    } catch (err) {
-        alert('Upload failed: ' + err.message);
-        progress.classList.remove('active');
-        document.getElementById('submit-btn').disabled = false;
+dropZone.addEventListener('drop', async ev => {
+    const items = ev.dataTransfer?.items;
+    if (items && items.length && items[0].webkitGetAsEntry) {
+        const collected = [];
+        const entries = [...items].map(it => it.webkitGetAsEntry()).filter(Boolean);
+        await Promise.all(entries.map(e => walkEntry(e, '', collected)));
+        addFiles(collected);
+    } else {
+        addFiles(ev.dataTransfer.files);
     }
 });
 
-async function pollStatus() {
-    const resp = await fetch(`/api/analysis/${currentJobId}`);
-    const data = await resp.json();
-
-    if (data.status === 'completed') {
-        progress.classList.remove('active');
-        showResults(data);
-    } else if (data.status === 'failed') {
-        progress.classList.remove('active');
-        alert('Analysis failed: ' + (data.error || 'Unknown error'));
-        document.getElementById('submit-btn').disabled = false;
-    } else {
-        document.getElementById('progress-text').textContent = 'Status · ' + data.status;
-        setTimeout(pollStatus, 2000);
+async function walkEntry(entry, prefix, out) {
+    if (entry.isFile) {
+        await new Promise(res => entry.file(f => {
+            // Attach relative path so the staged list shows where the file came from
+            try { Object.defineProperty(f, 'webkitRelativePath', { value: prefix + entry.name }); } catch {}
+            out.push(f); res();
+        }));
+    } else if (entry.isDirectory) {
+        const reader = entry.createReader();
+        await new Promise(res => {
+            const readBatch = () => reader.readEntries(async results => {
+                if (!results.length) { res(); return; }
+                await Promise.all(results.map(e => walkEntry(e, prefix + entry.name + '/', out)));
+                readBatch();
+            });
+            readBatch();
+        });
     }
 }
 
-function showResults(data) {
-    const summary = data.result?.summary || {};
-    const isMotility = data.type === 'motility' || summary.total_tracks !== undefined;
-    resultCard.classList.add('active');
+// ── Picker inputs ──────────────────────────────────────────────
+document.getElementById('pick-files-btn').addEventListener('click', () => fileInput.click());
+document.getElementById('pick-folder-btn').addEventListener('click', () => folderInput.click());
+document.getElementById('clear-staged').addEventListener('click', clearStaged);
+fileInput.addEventListener('change', () => addFiles(fileInput.files));
+folderInput.addEventListener('change', () => addFiles(folderInput.files));
 
-    document.getElementById('result-file').textContent = 'FILE: ' + (data.filename || '—');
+// ── Submit ─────────────────────────────────────────────────────
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const uploadable = staged.filter(s => s.type !== 'skipped');
+    if (!uploadable.length) return;
 
-    if (isMotility) {
-        document.getElementById('label-0').textContent = 'Tracked Cells';
-        document.getElementById('label-1').textContent = 'Total Motility';
-        document.getElementById('label-2').textContent = 'Progressive';
-        document.getElementById('stat-total').textContent = summary.total_tracks || 0;
-        document.getElementById('stat-normal').textContent = (summary.total_motility_pct || 0) + '%';
-        document.getElementById('stat-abnormal').textContent = (summary.progressive_motility_pct || 0) + '%';
-        document.getElementById('stat-time').textContent = data.result?.metadata?.processing_time_s || '—';
-        document.getElementById('delta-0').textContent = 'CELLS TRACKED';
-        document.getElementById('delta-1').textContent = 'MOTILE FRACTION';
-        document.getElementById('delta-2').textContent = 'FORWARD-SWIMMING';
-    } else {
-        document.getElementById('label-0').textContent = 'Total Cells';
-        document.getElementById('label-1').textContent = 'Normal %';
-        document.getElementById('label-2').textContent = 'Abnormal %';
-        document.getElementById('stat-total').textContent = summary.total_cells || 0;
-        document.getElementById('stat-normal').textContent = (summary.normal_pct || 0) + '%';
-        document.getElementById('stat-abnormal').textContent = (summary.abnormal_pct || 0) + '%';
-        document.getElementById('stat-time').textContent = data.result?.processing_time_s || '—';
-        document.getElementById('delta-0').textContent = 'DETECTED OBJECTS';
-        document.getElementById('delta-1').textContent = 'INTACT MORPHOLOGY';
-        document.getElementById('delta-2').textContent = 'DEFECT RATE';
+    const fd = new FormData();
+    // Copy over the metadata form fields
+    form.querySelectorAll('input[name], select[name]').forEach(el => {
+        if (el.type !== 'file' && el.name) fd.append(el.name, el.value);
+    });
+    uploadable.forEach(s => fd.append('files', s.file, s.path));
+
+    submitBtn.disabled = true;
+    submitLabel.textContent = 'Uploading…';
+
+    try {
+        const resp = await fetch('/api/upload/batch', { method: 'POST', body: fd });
+        if (!resp.ok) {
+            const err = await resp.json().catch(() => ({}));
+            throw new Error(err.detail || ('Upload failed (' + resp.status + ')'));
+        }
+        const data = await resp.json();
+        renderBatch(data);
+        form.style.display = 'none';
+    } catch (err) {
+        alert('Upload failed: ' + err.message);
+        submitBtn.disabled = false;
+        renderStaged();
+    }
+});
+
+// ── Batch progress rendering + polling ─────────────────────────
+function renderBatch(batch) {
+    batchPanel.style.display = 'block';
+    document.getElementById('batch-actions').style.display = 'none';
+    batchList.innerHTML = '';
+
+    const jobs = batch.accepted;
+    jobs.forEach((j, i) => {
+        const row = document.createElement('div');
+        row.className = 'batch-row';
+        row.id = 'row-' + j.job_id;
+        row.innerHTML = `
+            <span class="row-num">${String(i + 1).padStart(2, '0')}</span>
+            <div class="row-file" title="${escapeHtml(j.filename)}">${escapeHtml(j.filename)}</div>
+            <span class="type-chip ${j.type === 'motility' ? 'motility' : 'image'}">${j.type === 'motility' ? 'Video' : 'Image'}</span>
+            <span class="status-chip queued" id="status-${j.job_id}">Queued</span>
+            <a class="row-link disabled" id="link-${j.job_id}">View →</a>
+        `;
+        batchList.appendChild(row);
+    });
+
+    if (batch.skipped && batch.skipped.length) {
+        batch.skipped.forEach(sk => {
+            const row = document.createElement('div');
+            row.className = 'batch-row';
+            row.innerHTML = `
+                <span class="row-num">—</span>
+                <div class="row-file">${escapeHtml(sk.filename)}</div>
+                <span class="type-chip skipped">Skipped</span>
+                <span class="status-chip failed">${escapeHtml(sk.reason || 'skipped')}</span>
+                <span class="row-link disabled">—</span>
+            `;
+            batchList.appendChild(row);
+        });
     }
 
-    const badge = document.getElementById('quality-badge');
-    const qc = (summary.quality_class || 'unknown');
-    badge.textContent = qc;
-    badge.className = 'quality-badge quality-' + qc;
-
-    const summaryText = isMotility
-        ? `Sample tracked ${summary.total_tracks || 0} objects across ${data.result?.metadata?.frames_analyzed || 0} frames. Total motility ${summary.total_motility_pct || 0}%, progressive motility ${summary.progressive_motility_pct || 0}%. Quality classification: <strong>${qc.toUpperCase()}</strong>.`
-        : `Analysis detected ${summary.total_cells || 0} cells with ${summary.normal_pct || 0}% intact morphology. Quality classification: <strong>${qc.toUpperCase()}</strong>. Report generated per WHO laboratory standards.`;
-    document.getElementById('diagnostic-summary').innerHTML = summaryText;
-
-    document.getElementById('btn-pdf').onclick = () => window.open(`/api/report/${currentJobId}/pdf`);
-    document.getElementById('btn-json').onclick = () => window.open(`/api/report/${currentJobId}/json`);
-    document.getElementById('btn-csv').onclick = () => window.open(`/api/report/${currentJobId}/csv`);
-    document.getElementById('btn-html').onclick = () => window.open(`/api/report/${currentJobId}/html`);
-
-    document.getElementById('submit-btn').disabled = false;
+    updateBatchHeader(jobs, 0);
+    jobs.forEach(j => pollJob(j.job_id, jobs));
 }
+
+function pollJob(jobId, allJobs) {
+    const attempt = async () => {
+        try {
+            const resp = await fetch('/api/analysis/' + jobId);
+            if (!resp.ok) throw new Error('status ' + resp.status);
+            const data = await resp.json();
+            const chip = document.getElementById('status-' + jobId);
+            const link = document.getElementById('link-' + jobId);
+            if (!chip) return;
+
+            chip.className = 'status-chip ' + data.status;
+            chip.textContent = data.status;
+
+            if (data.status === 'completed') {
+                if (link) {
+                    link.classList.remove('disabled');
+                    link.href = '/report/' + jobId;
+                    link.target = '_blank';
+                }
+                pollers.delete(jobId);
+                updateBatchHeader(allJobs);
+                maybeFinalize(allJobs);
+            } else if (data.status === 'failed') {
+                chip.title = data.error || '';
+                pollers.delete(jobId);
+                updateBatchHeader(allJobs);
+                maybeFinalize(allJobs);
+            } else {
+                pollers.set(jobId, setTimeout(attempt, 2500));
+            }
+        } catch (err) {
+            pollers.set(jobId, setTimeout(attempt, 3500));
+        }
+    };
+    attempt();
+}
+
+function getJobStatus(jobId) {
+    const chip = document.getElementById('status-' + jobId);
+    return chip ? chip.textContent : 'queued';
+}
+
+function updateBatchHeader(jobs) {
+    const done = jobs.filter(j => {
+        const s = getJobStatus(j.job_id);
+        return s === 'completed' || s === 'failed';
+    }).length;
+    document.getElementById('batch-sub').textContent = `${done} / ${jobs.length} completed`;
+    document.getElementById('batch-bar').style.width = (jobs.length ? (done / jobs.length * 100) : 0) + '%';
+}
+
+function maybeFinalize(jobs) {
+    const stillRunning = jobs.some(j => {
+        const s = getJobStatus(j.job_id);
+        return s !== 'completed' && s !== 'failed';
+    });
+    if (!stillRunning) {
+        document.getElementById('batch-actions').style.display = 'flex';
+    }
+}
+
+function resetBatch() {
+    // Cancel any outstanding polls
+    for (const id of pollers.values()) clearTimeout(id);
+    pollers.clear();
+    staged = [];
+    fileInput.value = '';
+    folderInput.value = '';
+    batchPanel.style.display = 'none';
+    form.style.display = 'block';
+    renderStaged();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+renderStaged();
 </script>
 </body>
 </html>
